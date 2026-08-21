@@ -24,12 +24,12 @@ The default is the three-line pill layout.
 
 ## Font setup
 
-Use `JetBrainsMonoNL Nerd Font`, not the unpatched upstream JetBrains Mono.
-The `NL` family is the no-ligatures variant, and the Nerd Font patch supplies
-the prompt's Powerline and environment glyphs.
+For best results, use a font with Nerd Font glyph support. We recommend
+`JetBrainsMonoNL Nerd Font`, the no-ligatures JetBrains Mono Nerd Font family.
+It includes the Powerline and environmental glyphs used by this prompt.
 
-On Linux, install the current JetBrains Mono Nerd Font release into your local
-font directory and rebuild the Fontconfig cache:
+On Linux, you can install the current JetBrains Mono Nerd Font release into
+your local font directory and rebuild the Fontconfig cache:
 
 ```sh
 mkdir -p ~/.local/share/fonts/JetBrainsMonoNL
@@ -40,10 +40,10 @@ fc-cache -fv ~/.local/share/fonts
 fc-match 'JetBrainsMonoNL Nerd Font'
 ```
 
-Set your terminal's font family to `JetBrainsMonoNL Nerd Font`. If the terminal
-requires strict single-width glyphs, use `JetBrainsMonoNL Nerd Font Mono`
-instead. Log out and back in before selecting the font so your desktop session
-and terminal discover the refreshed font cache.
+Afterward, select `JetBrainsMonoNL Nerd Font` in your terminal. If it requires
+strict single-width glyphs, select `JetBrainsMonoNL Nerd Font Mono` instead.
+Log out and back in before choosing the font so your desktop session and
+terminal discover the refreshed font cache.
 
 ## Install
 
