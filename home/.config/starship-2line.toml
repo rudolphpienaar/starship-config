@@ -5,7 +5,7 @@ command_timeout = 2000
 add_newline = true
 
 format = """
-[╭─](fg:#4e4e4e)$os$env_var$hostname$directory$git_branch$git_status$fill$status$cmd_duration$jobs$direnv$git_commit$nodejs$python$c$rust$golang$java$lua$kubernetes$terraform$aws$gcloud${custom.gh_ok}${custom.gh_err}$nix_shell$time
+[╭─](fg:#4e4e4e)$os$env_var$hostname$directory$git_branch$git_status$fill$status$cmd_duration$jobs$direnv$git_commit$nodejs$python$c$rust$golang$java$lua$kubernetes$terraform$aws$gcloud${custom.gh_ok}${custom.gh_err}$nix_shell${custom.ram_ok}${custom.ram_warn}${custom.ram_crit}${custom.disk_ok}${custom.disk_warn}${custom.disk_crit}${custom.load_ok}${custom.load_warn}${custom.load_crit}$time
 [╰─](fg:#4e4e4e)$character"""
 
 [fill]
@@ -153,6 +153,60 @@ format = "[](fg:#005f87)[ 󱇶 gcp:rp(@$project) ]($style)[](fg:#005f87) "
 [nix_shell]
 style = "bg:#005f87 fg:#eeeeee bold"
 format = "[](fg:#005f87)[  nix ]($style)[](fg:#005f87) "
+
+[custom.ram_ok]
+command = "~/.config/starship-system-status.sh ram"
+when = "~/.config/starship-system-status.sh ram-state normal"
+style = "bg:#005f5f fg:#eeeeee bold"
+format = "[](fg:#005f5f)[ 󰍛 $output ]($style)[](fg:#005f5f) "
+
+[custom.ram_warn]
+command = "~/.config/starship-system-status.sh ram"
+when = "~/.config/starship-system-status.sh ram-state yellow"
+style = "bg:#d7af00 fg:#080808 bold"
+format = "[](fg:#d7af00)[ 󰍛 $output ]($style)[](fg:#d7af00) "
+
+[custom.ram_crit]
+command = "~/.config/starship-system-status.sh ram"
+when = "~/.config/starship-system-status.sh ram-state red"
+style = "bg:#c62828 fg:#ffffff bold"
+format = "[](fg:#c62828)[ 󰍛 $output ]($style)[](fg:#c62828) "
+
+[custom.disk_ok]
+command = "~/.config/starship-system-status.sh disk"
+when = "~/.config/starship-system-status.sh disk-state normal"
+style = "bg:#5f5f87 fg:#eeeeee bold"
+format = "[](fg:#5f5f87)[ 󰋊 $output% free ]($style)[](fg:#5f5f87) "
+
+[custom.disk_warn]
+command = "~/.config/starship-system-status.sh disk"
+when = "~/.config/starship-system-status.sh disk-state yellow"
+style = "bg:#d7af00 fg:#080808 bold"
+format = "[](fg:#d7af00)[ 󰋊 $output% free ]($style)[](fg:#d7af00) "
+
+[custom.disk_crit]
+command = "~/.config/starship-system-status.sh disk"
+when = "~/.config/starship-system-status.sh disk-state red"
+style = "bg:#c62828 fg:#ffffff bold"
+format = "[](fg:#c62828)[ 󰋊 $output% free ]($style)[](fg:#c62828) "
+
+[custom.load_ok]
+command = "~/.config/starship-system-status.sh load"
+when = "~/.config/starship-system-status.sh load-state normal"
+style = "bg:#875f00 fg:#eeeeee bold"
+format = "[](fg:#875f00)[ 󰓅 $output ]($style)[](fg:#875f00) "
+
+[custom.load_warn]
+command = "~/.config/starship-system-status.sh load"
+when = "~/.config/starship-system-status.sh load-state yellow"
+style = "bg:#d7af00 fg:#080808 bold"
+format = "[](fg:#d7af00)[ 󰓅 $output ]($style)[](fg:#d7af00) "
+
+[custom.load_crit]
+command = "~/.config/starship-system-status.sh load"
+when = "~/.config/starship-system-status.sh load-state red"
+style = "bg:#c62828 fg:#ffffff bold"
+format = "[](fg:#c62828)[ 󰓅 $output ]($style)[](fg:#c62828) "
 
 # Time Segment
 [time]

@@ -16,7 +16,8 @@ for path in \
   .config/starship-2line.toml \
   .config/starship-3line.toml \
   .config/starship-nopills.toml \
-  .config/starship-gh-status.sh; do
+  .config/starship-gh-status.sh \
+  .config/starship-system-status.sh; do
   [ -L "$test_home/$path" ] || { echo "expected symlink: $path" >&2; exit 1; }
 done
 
@@ -31,6 +32,27 @@ backup_count=$(find "$test_home/.install-backups" -type f | wc -l | tr -d ' ')
 sh -n "$repo_dir/install.sh"
 sh -n "$test_home/.splash"
 sh -n "$test_home/.config/starship-gh-status.sh"
+sh -n "$test_home/.config/starship-system-status.sh"
+for status_name in ram disk load; do
+  status_output=$("$test_home/.config/starship-system-status.sh" "$status_name")
+  [ -n "$status_output" ] || {
+    echo "expected $status_name status output" >&2
+    exit 1
+  }
+  if [ "$status_name" = ram ]; then
+    case $status_output in */*) ;; *) echo "expected free/total RAM output" >&2; exit 1 ;; esac
+  fi
+  matching_states=0
+  for state_name in normal yellow red; do
+    if "$test_home/.config/starship-system-status.sh" "$status_name-state" "$state_name"; then
+      matching_states=$((matching_states + 1))
+    fi
+  done
+  [ "$matching_states" -eq 1 ] || {
+    echo "expected exactly one $status_name color state" >&2
+    exit 1
+  }
+done
 zsh -n "$test_home/.zshrc"
 [ "$(grep -c 'starship init zsh' "$test_home/.zshrc")" -eq 1 ] || {
   echo "expected exactly one Starship initialization" >&2

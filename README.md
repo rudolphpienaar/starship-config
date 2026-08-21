@@ -12,6 +12,11 @@ The GitHub pill is reactive. It is green when `gh auth status` succeeds and
 red when it fails, so an expired or missing GitHub CLI login is visible before
 you need it.
 
+System-status pills show available/total RAM, the free-space percentage of the
+current filesystem, and the one-minute load average. RAM and disk pills turn
+yellow below 15% free and red below 5%; load turns yellow above 5 and red above
+10. They work on Linux, Termux, and macOS without additional dependencies.
+
 ## Contents
 
 - [Prompt controls](#prompt-controls)
@@ -122,6 +127,7 @@ to `~/.install-backups/<timestamp>/` before linking.
 - `~/.config/starship.toml` and the two- and three-line variants
 - `~/.config/starship-nopills.toml`
 - `~/.config/starship-gh-status.sh`
+- `~/.config/starship-system-status.sh`
 
 Optional visual integrations are Atuin, Broot, GitHub CLI, Fortune, CPUFetch,
 and Neofetch. Missing optional tools are guarded so Zsh still starts normally.
