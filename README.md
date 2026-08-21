@@ -12,6 +12,18 @@ The GitHub pill is reactive. It is green when `gh auth status` succeeds and
 red when it fails, so an expired or missing GitHub CLI login is visible before
 you need it.
 
+## Contents
+
+- [Prompt controls](#prompt-controls)
+- [Font setup](#font-setup)
+  - [Linux](#linux)
+  - [macOS](#macos)
+  - [Termux](#termux)
+- [Install](#install)
+  - [Useful installer options](#useful-installer-options)
+- [Managed files](#managed-files)
+- [Verify](#verify)
+
 ## Prompt controls
 
 `tp` toggles the environmental pills on and off.
