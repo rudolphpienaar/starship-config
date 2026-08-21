@@ -20,8 +20,30 @@ you need it.
 three-line layout when the pills would overflow a single line; `tl` is
 available only while pills are enabled.
 
-The default is the three-line pill layout. The prompt needs a Nerd Font for
-its icons.
+The default is the three-line pill layout.
+
+## Font setup
+
+Use `JetBrainsMonoNL Nerd Font`, not the unpatched upstream JetBrains Mono.
+The `NL` family is the no-ligatures variant, and the Nerd Font patch supplies
+the prompt's Powerline and environment glyphs.
+
+On Linux, install the current JetBrains Mono Nerd Font release into your local
+font directory and rebuild the Fontconfig cache:
+
+```sh
+mkdir -p ~/.local/share/fonts/JetBrainsMonoNL
+curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz
+tar -xJf JetBrainsMono.tar.xz -C ~/.local/share/fonts/JetBrainsMonoNL \
+  --wildcards '*JetBrainsMonoNLNerdFont*.ttf'
+fc-cache -fv ~/.local/share/fonts
+fc-match 'JetBrainsMonoNL Nerd Font'
+```
+
+Set your terminal's font family to `JetBrainsMonoNL Nerd Font`. If the terminal
+requires strict single-width glyphs, use `JetBrainsMonoNL Nerd Font Mono`
+instead. Log out and back in before selecting the font so your desktop session
+and terminal discover the refreshed font cache.
 
 ## Install
 
