@@ -1,25 +1,44 @@
-# Portable Zsh + Starship setup
+# Powerlevel10k-inspired Starship prompt
 
-This repository reproduces the Zsh prompt and startup environment from this
-machine. It keeps the configuration in `home/` and installs it into a user
-home directory as symlinks.
+This project began as a Starship recreation of the Powerlevel10k Zsh prompt.
+It keeps the familiar powerline-style context on the left, while making the
+prompt straightforward to install and customize as ordinary dotfiles.
+
+Along the way, it developed its own visual language: rounded environmental
+"pills" on the right. They surface active tools, cloud contexts, status, and
+other useful tokens without crowding the primary directory and Git context.
+
+The GitHub pill is reactive. It is green when `gh auth status` succeeds and
+red when it fails, so an expired or missing GitHub CLI login is visible before
+you need it.
+
+## Prompt controls
+
+`tp` toggles the environmental pills on and off.
+
+`tl` switches between the two-line and three-line pill layouts. Use the
+three-line layout when the pills would overflow a single line; `tl` is
+available only while pills are enabled.
+
+The default is the three-line pill layout. The prompt needs a Nerd Font for
+its icons.
 
 ## Install
 
-Run the installer from a clone:
+The configuration lives under `home/` and is installed into your home directory
+as symlinks. Run the installer from a clone:
 
 ```sh
 ./install.sh
 ```
 
 It detects Arch (`pacman`), macOS/Homebrew, and Debian/Ubuntu (`apt`) and tries
-to install the core shell tools plus optional integrations. It then installs
-pinned NVM, Node, Zsh plugins, and the managed symlinks. Authentication and
-account state for GitHub, Atuin, and cloud providers remain local to each
-machine.
+to install core shell tools and optional integrations. It then installs pinned
+NVM, Node, Zsh plugins, and the managed symlinks.
 
-Existing files that differ from a managed symlink are moved to
-`~/.install-backups/<timestamp>/` before linking.
+Authentication and account state for GitHub, Atuin, and cloud providers remain
+local to each machine. Existing files that differ from a managed symlink move
+to `~/.install-backups/<timestamp>/` before linking.
 
 ### Useful installer options
 
@@ -36,17 +55,11 @@ Existing files that differ from a managed symlink are moved to
 - `~/.config/starship-nopills.toml`
 - `~/.config/starship-gh-status.sh`
 
-The prompt needs a Nerd Font for its icons. Optional visual integrations are
-Atuin, Broot, GitHub CLI, Fortune, CPUFetch, and Neofetch. Missing optional
-tools are guarded so that Zsh still starts normally.
+Optional visual integrations are Atuin, Broot, GitHub CLI, Fortune, CPUFetch,
+and Neofetch. Missing optional tools are guarded so Zsh still starts normally.
 
-## Prompt controls
-
-- `tp` toggles pill segments on and off.
-- `tl` switches the pill prompt between the two-line and three-line layouts.
-
-The default is the three-line pill layout. The default Node version is pinned
-in `.nvmrc`; NVM and the two Zsh plugins are pinned in `install.sh`.
+The default Node version is pinned in `.nvmrc`; NVM and the two Zsh plugins
+are pinned in `install.sh`.
 
 ## Verify
 
