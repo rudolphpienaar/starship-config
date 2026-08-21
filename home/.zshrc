@@ -59,7 +59,7 @@ command -v atuin &>/dev/null && eval "$(atuin init zsh)"
 # ==============================================================================
 # User Binaries & NVM Initialization
 # ==============================================================================
-export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/arch/scripts:$PATH"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

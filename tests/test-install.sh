@@ -46,7 +46,7 @@ for command_name in bash grep hostname mv uname wc whoami; do
 done
 zsh_path=$(command -v zsh)
 minimal_stderr="$test_home/minimal-zsh.stderr"
-HOME="$test_home" PATH="$test_home/bin" "$zsh_path" -fc 'unset STARSHIP_CONFIG STARSHIP_LAYOUT STARSHIP_PILLS; . "$HOME/.zshrc"; [ "$STARSHIP_CONFIG" = "$HOME/.config/starship-3line.toml" ]; whence -w tp; whence -w tl' >/dev/null 2>"$minimal_stderr"
+HOME="$test_home" PATH="$test_home/bin" "$zsh_path" -fc 'unset STARSHIP_CONFIG STARSHIP_LAYOUT STARSHIP_PILLS; . "$HOME/.zshrc"; [ "$STARSHIP_CONFIG" = "$HOME/.config/starship-3line.toml" ]; case ":$PATH:" in *":$HOME/arch/scripts:"*) ;; *) exit 1 ;; esac; whence -w tp; whence -w tl' >/dev/null 2>"$minimal_stderr"
 [ ! -s "$minimal_stderr" ] || {
   cat "$minimal_stderr" >&2
   exit 1
