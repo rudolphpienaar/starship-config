@@ -32,9 +32,11 @@ as symlinks. Run the installer from a clone:
 ./install.sh
 ```
 
-It detects Arch (`pacman`), macOS/Homebrew, and Debian/Ubuntu (`apt`) and tries
-to install core shell tools and optional integrations. It then installs pinned
-NVM, Node, Zsh plugins, and the managed symlinks.
+It detects Arch (`pacman`), macOS/Homebrew, Debian/Ubuntu (`apt`), and Termux
+on Android (`pkg`). It tries to install core shell tools and optional
+integrations, then installs Node, Zsh plugins, and the managed symlinks. Other
+supported platforms use pinned NVM and Node. Termux uses `pkg` directly,
+installs its native `nodejs` package, and never requires `sudo` or NVM.
 
 Authentication and account state for GitHub, Atuin, and cloud providers remain
 local to each machine. Existing files that differ from a managed symlink move

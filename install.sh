@@ -60,17 +60,25 @@ warn() {
   printf '%s\n' "Warning: $*" >&2
 }
 
+is_termux() {
+  [ -n "${TERMUX_VERSION:-}" ] || [ "${PREFIX:-}" = "/data/data/com.termux/files/usr" ]
+}
+
 install_one_package() {
   package_name=$1
   case $package_manager in
     pacman) sudo pacman -S --needed "$package_name" || warn "could not install $package_name" ;;
     brew) brew install "$package_name" || warn "could not install $package_name" ;;
     apt) sudo apt-get install -y "$package_name" || warn "could not install $package_name" ;;
+    termux) pkg install -y "$package_name" || warn "could not install $package_name" ;;
   esac
 }
 
 install_os_packages() {
-  if command -v pacman >/dev/null 2>&1; then
+  if is_termux; then
+    package_manager=termux
+    pkg update -y || warn "Termux package metadata could not be refreshed"
+  elif command -v pacman >/dev/null 2>&1; then
     package_manager=pacman
   elif command -v brew >/dev/null 2>&1; then
     package_manager=brew
@@ -93,6 +101,9 @@ install_os_packages() {
       ;;
     apt)
       for package_name in atuin broot gh fortune-mod neofetch; do install_one_package "$package_name"; done
+      ;;
+    termux)
+      for package_name in nodejs atuin broot gh fortune cpufetch neofetch; do install_one_package "$package_name"; done
       ;;
   esac
 }
@@ -149,14 +160,19 @@ install_external_tools() {
     return
   fi
 
-  log "Installing pinned NVM, Node, and Zsh plugins"
-  checkout_repo "https://github.com/nvm-sh/nvm.git" "$target_home/.nvm" "$NVM_VERSION"
-  NVM_DIR="$target_home/.nvm"
-  export NVM_DIR
-  . "$NVM_DIR/nvm.sh"
-  nvm install "$NODE_VERSION"
-  nvm alias default "$NODE_VERSION"
+  if is_termux; then
+    log "Using Termux's native nodejs package; skipping NVM"
+  else
+    log "Installing pinned NVM and Node"
+    checkout_repo "https://github.com/nvm-sh/nvm.git" "$target_home/.nvm" "$NVM_VERSION"
+    NVM_DIR="$target_home/.nvm"
+    export NVM_DIR
+    . "$NVM_DIR/nvm.sh"
+    nvm install "$NODE_VERSION"
+    nvm alias default "$NODE_VERSION"
+  fi
 
+  log "Installing pinned Zsh plugins"
   checkout_repo "https://github.com/zsh-users/zsh-autosuggestions.git" \
     "$target_home/.zsh/plugins/zsh-autosuggestions" "$AUTOSUGGESTIONS_COMMIT"
   checkout_repo "https://github.com/zsh-users/zsh-syntax-highlighting.git" \

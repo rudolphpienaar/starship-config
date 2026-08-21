@@ -51,3 +51,25 @@ HOME="$test_home" PATH="$test_home/bin" "$zsh_path" -fc 'unset STARSHIP_CONFIG S
   cat "$minimal_stderr" >&2
   exit 1
 }
+
+termux_bin="$test_home/termux-bin"
+termux_home="$test_home/termux-home"
+termux_package_log="$test_home/termux-packages.log"
+mkdir "$termux_bin"
+printf '%s\n' '#!/bin/sh' 'printf "%s\\n" "$*" >> "$TEST_PACKAGE_LOG"' > "$termux_bin/pkg"
+printf '%s\n' '#!/bin/sh' 'printf "sudo %s\\n" "$*" >> "$TEST_PACKAGE_LOG"' 'exit 99' > "$termux_bin/sudo"
+printf '%s\n' '#!/bin/sh' 'if [ "$1" = clone ]; then mkdir -p "$3/.git"; fi' 'exit 0' > "$termux_bin/git"
+printf '%s\n' '#!/bin/sh' 'exit 0' > "$termux_bin/broot"
+chmod +x "$termux_bin/pkg"
+chmod +x "$termux_bin/sudo"
+chmod +x "$termux_bin/git"
+chmod +x "$termux_bin/broot"
+TERMUX_VERSION=0.118.0 PREFIX=/data/data/com.termux/files/usr \
+  TEST_PACKAGE_LOG="$termux_package_log" PATH="$termux_bin:$PATH" \
+  "$repo_dir/install.sh" --home "$termux_home" >/dev/null
+grep -Fx 'update -y' "$termux_package_log" >/dev/null
+grep -Fx 'install -y starship' "$termux_package_log" >/dev/null
+grep -Fx 'install -y nodejs' "$termux_package_log" >/dev/null
+[ ! -d "$termux_home/.nvm" ] || { echo "Termux install used NVM" >&2; exit 1; }
+! grep -q '^sudo ' "$termux_package_log"
+[ -L "$termux_home/.zshrc" ] || { echo "Termux install did not link .zshrc" >&2; exit 1; }
