@@ -44,7 +44,7 @@ format = "[  $ssh_symbol$hostname ]($style)[](fg:#5f00af bg:#000087)"
 [directory]
 style = "bg:#000087 fg:#eeeeee"
 format = "[  $path ]($style)[](fg:#000087)"
-truncation_length = 3
+truncation_length = 8
 truncation_symbol = "…/"
 
 [git_branch]

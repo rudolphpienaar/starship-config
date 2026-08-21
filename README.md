@@ -37,6 +37,10 @@ In that layout, a horizontal rule connects the left prompt segments to the
 right-side environmental pills. Every left segment group begins with a
 Powerline arrow cap.
 
+Directory paths retain up to eight path components in every layout. Longer
+paths begin with `…/`; inside a Git repository, Starship also hides path
+components above the repository root.
+
 ## Font setup
 
 For best results, use a font with Nerd Font glyph support. We recommend
