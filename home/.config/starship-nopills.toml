@@ -39,6 +39,8 @@ format = "[  $ssh_symbol$hostname ]($style)[](fg:#5f00af bg:#000087)"
 [directory]
 style = "bg:#000087 fg:#eeeeee"
 format = "[  $path ]($style)[](fg:#000087)"
+repo_root_style = "bg:#000087 fg:#eeeeee"
+repo_root_format = "[  $before_root_path$repo_root$path ]($style)"
 truncation_length = 8
 truncation_symbol = "…/"
 
