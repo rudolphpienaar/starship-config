@@ -36,6 +36,10 @@ zsh -n "$test_home/.zshrc"
   echo "expected exactly one Starship initialization" >&2
   exit 1
 }
+! grep -q "source $test_home" "$repo_dir/home/.zshrc" || {
+  echo "managed .zshrc contains a machine-specific source line" >&2
+  exit 1
+}
 for config_file in "$test_home"/.config/starship*.toml; do
   STARSHIP_CONFIG="$config_file" starship module character >/dev/null
 done
@@ -44,9 +48,10 @@ mkdir "$test_home/bin"
 for command_name in bash grep hostname mv uname wc whoami; do
   ln -s "$(command -v "$command_name")" "$test_home/bin/$command_name"
 done
+ln -s "$(command -v true)" "$test_home/bin/brew"
 zsh_path=$(command -v zsh)
 minimal_stderr="$test_home/minimal-zsh.stderr"
-HOME="$test_home" PATH="$test_home/bin" "$zsh_path" -fc 'unset STARSHIP_CONFIG STARSHIP_LAYOUT STARSHIP_PILLS; . "$HOME/.zshrc"; [ "$STARSHIP_CONFIG" = "$HOME/.config/starship-3line.toml" ]; case ":$PATH:" in *":$HOME/arch/scripts:"*) ;; *) exit 1 ;; esac; whence -w tp; whence -w tl' >/dev/null 2>"$minimal_stderr"
+HOME="$test_home" PATH="$test_home/bin" "$zsh_path" -fc 'unset STARSHIP_CONFIG STARSHIP_LAYOUT STARSHIP_PILLS; . "$HOME/.zshrc"; [ "$STARSHIP_CONFIG" = "$HOME/.config/starship-2line.toml" ]; case ":$PATH:" in *":$HOME/arch/scripts:"*) ;; *) exit 1 ;; esac; whence -w tp; whence -w tl' >/dev/null 2>"$minimal_stderr"
 [ ! -s "$minimal_stderr" ] || {
   cat "$minimal_stderr" >&2
   exit 1

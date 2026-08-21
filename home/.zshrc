@@ -6,6 +6,20 @@ export USERNAME=$(whoami)
 export EDITOR="nvim"
 export VISUAL="nvim"
 
+# Homebrew isn't always added to PATH for non-login shells. Bootstrap its
+# standard locations before initializing any tools installed through it.
+if ! command -v brew >/dev/null 2>&1; then
+  for brew_prefix in /home/linuxbrew/.linuxbrew /opt/homebrew /usr/local; do
+    if [[ -x "$brew_prefix/bin/brew" ]]; then
+      export PATH="$brew_prefix/bin:$brew_prefix/sbin:$PATH"
+      export HOMEBREW_PREFIX="$brew_prefix"
+      export HOMEBREW_CELLAR="$brew_prefix/Cellar"
+      export HOMEBREW_REPOSITORY="$brew_prefix/Homebrew"
+      break
+    fi
+  done
+fi
+
 # Colored man pages via less
 export LESS_TERMCAP_mb=$'\e[1;32m'
 export LESS_TERMCAP_md=$'\e[1;32m'
@@ -41,13 +55,19 @@ HISTSIZE=10000
 SAVEHIST=10000
 setopt APPEND_HISTORY SHARE_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_ALL_DUPS HIST_FIND_NO_DUPS
 
-autoload -Uz compinit && compinit -d ~/.zcompdump
+if [[ -o interactive ]]; then
+  autoload -Uz compinit && compinit -d ~/.zcompdump
+fi
 zstyle ':completion:*' menu select
 
 # ==============================================================================
 # External Tool Integrations (Broot, Atuin, Starship)
 # ==============================================================================
-[[ -f ~/.config/broot/launcher/bash/br ]] && source ~/.config/broot/launcher/bash/br
+if [[ -f ~/.config/broot/launcher/zsh/br ]]; then
+  source ~/.config/broot/launcher/zsh/br
+elif [[ -f ~/.config/broot/launcher/bash/br ]]; then
+  source ~/.config/broot/launcher/bash/br
+fi
 command -v atuin &>/dev/null && eval "$(atuin init zsh)"
 
 # ==============================================================================
@@ -70,7 +90,7 @@ export NVM_DIR="$HOME/.nvm"
 # ==============================================================================
 
 export STARSHIP_PILLS=${STARSHIP_PILLS:-"on"}
-export STARSHIP_LAYOUT=${STARSHIP_LAYOUT:-"3line"}
+export STARSHIP_LAYOUT=${STARSHIP_LAYOUT:-"2line"}
 
 _apply_starship_config() {
   if [[ "$STARSHIP_PILLS" == "off" ]]; then

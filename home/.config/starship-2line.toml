@@ -9,7 +9,7 @@ format = """
 [╰─](fg:#4e4e4e)$character"""
 
 [fill]
-symbol = " "
+symbol = "─"
 
 # ==============================================================================
 # Left Prompt Segments: OS  User  Host  Directory  Git
@@ -18,7 +18,7 @@ symbol = " "
 [os]
 disabled = false
 style = "bg:#e4e4e4 fg:#080808"
-format = "[ $symbol ]($style)[](fg:#e4e4e4 bg:#d78700)"
+format = "[](fg:#e4e4e4)[ $symbol ]($style)[](fg:#e4e4e4 bg:#d78700)"
 
 [os.symbols]
 Arch = "󰣇"

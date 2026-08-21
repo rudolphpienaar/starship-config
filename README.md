@@ -32,7 +32,10 @@ you need it.
 three-line layout when the pills would overflow a single line; `tl` is
 available only while pills are enabled.
 
-The default is the three-line pill layout.
+The default is the two-line pill layout.
+In that layout, a horizontal rule connects the left prompt segments to the
+right-side environmental pills. Every left segment group begins with a
+Powerline arrow cap.
 
 ## Font setup
 
@@ -90,10 +93,12 @@ as symlinks. Run the installer from a clone:
 ```
 
 It detects Arch (`pacman`), macOS/Homebrew, Debian/Ubuntu (`apt`), and Termux
-on Android (`pkg`). It tries to install core shell tools and optional
-integrations, then installs Node, Zsh plugins, and the managed symlinks. Other
-supported platforms use pinned NVM and Node. Termux uses `pkg` directly,
-installs its native `nodejs` package, and never requires `sudo` or NVM.
+on Android (`pkg`). Native Linux package managers take precedence when a
+Linuxbrew installation is also present. The installer tries to install core
+shell tools and optional integrations, then installs Node, Zsh plugins, and
+the managed symlinks. Other supported platforms use pinned NVM and Node.
+Termux uses `pkg` directly, installs its native `nodejs` package, and never
+requires `sudo` or NVM.
 
 Authentication and account state for GitHub, Atuin, and cloud providers remain
 local to each machine. Existing files that differ from a managed symlink move

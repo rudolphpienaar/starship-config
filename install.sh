@@ -80,11 +80,11 @@ install_os_packages() {
     pkg update -y || warn "Termux package metadata could not be refreshed"
   elif command -v pacman >/dev/null 2>&1; then
     package_manager=pacman
-  elif command -v brew >/dev/null 2>&1; then
-    package_manager=brew
   elif command -v apt-get >/dev/null 2>&1; then
     package_manager=apt
     sudo apt-get update || warn "apt package metadata could not be refreshed"
+  elif command -v brew >/dev/null 2>&1; then
+    package_manager=brew
   else
     warn "no supported package manager found; install the dependencies in README.md manually"
     return
@@ -179,7 +179,16 @@ install_external_tools() {
     "$target_home/.zsh/plugins/zsh-syntax-highlighting" "$SYNTAX_HIGHLIGHTING_COMMIT"
 
   if command -v broot >/dev/null 2>&1; then
-    HOME="$target_home" broot --install || warn "could not create Broot's shell launcher"
+    launcher_dir="$target_home/.config/broot/launcher/zsh"
+    launcher_file="$launcher_dir/br"
+    launcher_tmp="$launcher_file.tmp"
+    mkdir -p "$launcher_dir"
+    if broot --print-shell-function zsh >"$launcher_tmp"; then
+      mv "$launcher_tmp" "$launcher_file"
+    else
+      rm -f "$launcher_tmp"
+      warn "could not create Broot's shell launcher"
+    fi
   fi
 }
 
