@@ -28,8 +28,10 @@ For best results, use a font with Nerd Font glyph support. We recommend
 `JetBrainsMonoNL Nerd Font`, the no-ligatures JetBrains Mono Nerd Font family.
 It includes the Powerline and environmental glyphs used by this prompt.
 
-On Linux, you can install the current JetBrains Mono Nerd Font release into
-your local font directory and rebuild the Fontconfig cache:
+### Linux
+
+You can install the current JetBrains Mono Nerd Font release into your local
+font directory and rebuild the Fontconfig cache:
 
 ```sh
 mkdir -p ~/.local/share/fonts/JetBrainsMonoNL
@@ -40,10 +42,31 @@ fc-cache -fv ~/.local/share/fonts
 fc-match 'JetBrainsMonoNL Nerd Font'
 ```
 
-Afterward, select `JetBrainsMonoNL Nerd Font` in your terminal. If it requires
-strict single-width glyphs, select `JetBrainsMonoNL Nerd Font Mono` instead.
-Log out and back in before choosing the font so your desktop session and
-terminal discover the refreshed font cache.
+### macOS
+
+Homebrew installs the same Nerd Font family:
+
+```sh
+brew install --cask font-jetbrains-mono-nerd-font
+```
+
+### Termux
+
+The Linux Fontconfig installation does not configure the Termux app's font.
+Instead, extract the single-width NL font to Termux's expected `font.ttf`
+location, then reload its settings:
+
+```sh
+mkdir -p ~/.termux
+curl -fLo /tmp/JetBrainsMono.tar.xz https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz
+tar -xOJf /tmp/JetBrainsMono.tar.xz JetBrainsMonoNLNerdFontMono-Regular.ttf > ~/.termux/font.ttf
+termux-reload-settings
+```
+
+For Linux and macOS terminals, select `JetBrainsMonoNL Nerd Font`. If the
+terminal requires strict single-width glyphs, select `JetBrainsMonoNL Nerd Font
+Mono` instead. Log out and back in before choosing the font so your desktop
+session and terminal discover the refreshed font cache.
 
 ## Install
 
