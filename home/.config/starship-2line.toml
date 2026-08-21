@@ -1,0 +1,197 @@
+# Managed by this repository.
+command_timeout = 2000
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = true
+
+format = """
+[╭─](fg:#4e4e4e)$os$env_var$hostname$directory$git_branch$git_status$fill$status$cmd_duration$jobs$direnv$git_commit$nodejs$python$c$rust$golang$java$lua$kubernetes$terraform$aws$gcloud${custom.gh_ok}${custom.gh_err}$nix_shell$time
+[╰─](fg:#4e4e4e)$character"""
+
+[fill]
+symbol = " "
+
+# ==============================================================================
+# Left Prompt Segments: OS  User  Host  Directory  Git
+# ==============================================================================
+
+[os]
+disabled = false
+style = "bg:#e4e4e4 fg:#080808"
+format = "[ $symbol ]($style)[](fg:#e4e4e4 bg:#d78700)"
+
+[os.symbols]
+Arch = "󰣇"
+Ubuntu = ""
+Debian = ""
+Macos = ""
+Linux = ""
+Windows = ""
+Android = ""
+
+[env_var.USERNAME]
+variable = "USERNAME"
+style = "bg:#d78700 fg:#080808 bold"
+format = "[  $env_value ]($style)[](fg:#d78700 bg:#5f00af)"
+
+[hostname]
+ssh_only = false
+ssh_symbol = "󰣀 "
+style = "bg:#5f00af fg:#eeeeee"
+format = "[  $ssh_symbol$hostname ]($style)[](fg:#5f00af bg:#000087)"
+
+[directory]
+style = "bg:#000087 fg:#eeeeee"
+format = "[  $path ]($style)[](fg:#000087)"
+truncation_length = 8
+truncation_symbol = "…/"
+
+[git_branch]
+symbol = " "
+style = "bg:#005f00 fg:#080808 bold"
+format = "[](fg:#000087 bg:#005f00)[ $symbol$branch ]($style)"
+
+[git_status]
+style = "bg:#005f00 fg:#080808"
+format = "[$all_status$ahead_behind]($style)[](fg:#005f00)"
+conflicted = " [ ~${count}](fg:#870000 bold)"
+ahead = "  ${count}"
+behind = "  ${count}"
+diverged = "  ${ahead_count} ${behind_count}"
+untracked = "  ${count}"
+modified = "  ${count}"
+staged = "  ${count}"
+
+# ==============================================================================
+# Right Prompt Segments: Rounded Pill Containers ( ... )
+# ==============================================================================
+
+[status]
+disabled = false
+style = "bg:#870000 fg:#ffff00 bold"
+format = "[](fg:#870000)[ $symbol $status ]($style)[](fg:#870000) "
+symbol = "✘"
+success_symbol = ""
+
+[cmd_duration]
+min_time = 3000
+style = "bg:#af8700 fg:#080808"
+format = "[](fg:#af8700)[  $duration ]($style)[](fg:#af8700) "
+
+[jobs]
+symbol = " "
+style = "bg:#080808 fg:#00afff"
+format = "[](fg:#080808)[ $symbol$number ]($style)[](fg:#080808) "
+
+[direnv]
+disabled = false
+symbol = " "
+style = "bg:#080808 fg:#af8700"
+format = "[](fg:#080808)[ $symboldirenv ]($style)[](fg:#080808) "
+
+# Node.js / NVM
+[nodejs]
+symbol = " "
+style = "bg:#008700 fg:#080808 bold"
+format = "[](fg:#008700)[ $symbol($version) ]($style)[](fg:#008700) "
+detect_extensions = ["js", "mjs", "cjs", "ts", "mts", "cts"]
+detect_files = ["package.json", ".node-version", ".nvmrc"]
+
+# Python / Virtualenv
+[python]
+symbol = " "
+style = "bg:#005f87 fg:#eeeeee bold"
+format = '[](fg:#005f87)[ $symbol${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)[](fg:#005f87) '
+detect_extensions = ["py"]
+detect_files = [".python-version", "Pipfile", "pyproject.toml", "requirements.txt"]
+
+[c]
+symbol = " "
+style = "bg:#4e4e4e fg:#eeeeee bold"
+format = "[](fg:#4e4e4e)[ $symbol($version) ]($style)[](fg:#4e4e4e) "
+
+[rust]
+symbol = " "
+style = "bg:#d75f00 fg:#080808 bold"
+format = "[](fg:#d75f00)[ $symbol($version) ]($style)[](fg:#d75f00) "
+
+[golang]
+symbol = " "
+style = "bg:#0087d7 fg:#080808 bold"
+format = "[](fg:#0087d7)[ $symbol($version) ]($style)[](fg:#0087d7) "
+
+[java]
+symbol = " "
+style = "bg:#e4e4e4 fg:#af0000 bold"
+format = "[](fg:#e4e4e4)[ $symbol($version) ]($style)[](fg:#e4e4e4) "
+
+[lua]
+symbol = " "
+style = "bg:#005f87 fg:#eeeeee bold"
+format = "[](fg:#005f87)[ $symbol($version) ]($style)[](fg:#005f87) "
+
+[kubernetes]
+contexts = [{ context_alias = "k8s:arg", context_pattern = ".*argentum.*" }]
+disabled = false
+style = "bg:#870087 fg:#eeeeee bold"
+format = "[](fg:#870087)[ 󱃾 $context( \\($namespace\\)) ]($style)[](fg:#870087) "
+
+[terraform]
+style = "bg:#080808 fg:#0087d7 bold"
+format = "[](fg:#080808)[ 󱁢 $workspace ]($style)[](fg:#080808) "
+
+[aws]
+style = "bg:#870000 fg:#eeeeee bold"
+format = "[](fg:#870000)[  $profile ]($style)[](fg:#870000) "
+
+[gcloud]
+style = "bg:#005f87 fg:#eeeeee bold"
+format = "[](fg:#005f87)[ 󱇶 gcp:rp(@$project) ]($style)[](fg:#005f87) "
+
+[nix_shell]
+style = "bg:#005f87 fg:#eeeeee bold"
+format = "[](fg:#005f87)[  nix ]($style)[](fg:#005f87) "
+
+# Time Segment
+[time]
+disabled = false
+time_format = "%T"
+style = "bg:#e4e4e4 fg:#080808"
+format = "[](fg:#e4e4e4)[  $time ]($style)[](fg:#e4e4e4)"
+
+# ==============================================================================
+# Prompt Character (Line 2)
+# ==============================================================================
+
+[character]
+success_symbol = "[❯](bold fg:#5fd700) "
+error_symbol = "[❯](bold fg:#ff0000) "
+vimcmd_symbol = "[❮](bold fg:#5fd700) "
+vimcmd_replace_one_symbol = "[▶](bold fg:#af8700) "
+vimcmd_replace_symbol = "[▶](bold fg:#af8700) "
+vimcmd_visual_symbol = "[V](bold fg:#0087d7) "
+
+[git_commit]
+disabled = false
+only_detached = false
+tag_disabled = true
+commit_hash_length = 7
+style = "bg:#4e4e4e fg:#ffffff bold"
+format = "[\ue0b6](fg:#4e4e4e)[ \uf417 $hash ]($style)[\ue0b4](fg:#4e4e4e) "
+
+
+
+
+
+
+[custom.gh_ok]
+command = "exit 0"
+when = "~/.config/starship-gh-status.sh"
+style = "bg:#2e7d32 fg:#ffffff bold"
+format = "[\ue0b6](fg:#2e7d32)[ \uf09b ]($style)[\ue0b4](fg:#2e7d32) "
+
+[custom.gh_err]
+command = "exit 0"
+when = "! ~/.config/starship-gh-status.sh"
+style = "bg:#c62828 fg:#ffffff bold"
+format = "[\ue0b6](fg:#c62828)[ \uf09b ]($style)[\ue0b4](fg:#c62828) "

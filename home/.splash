@@ -1,0 +1,80 @@
+# Setup some variables for local/self/lab/java paths
+b_64=$(uname -a | grep x86_64 | wc -l)
+if (( b_64 )) ; then
+	BIT=64
+else
+	BIT=32
+fi
+
+for DIR in bin lib scripts ; do
+        for ACCESS in local self lab java python npm ; do
+                arch=$(uname)
+                b_NT=$(uname -a | grep CYGWIN | wc -l)
+                if (( b_NT )) ; then
+                        arch=win
+                fi
+                case $ACCESS in
+                        "self" )        root=$self      ;;
+                        "lab" )         root=$lab       ;;
+                        "java" )        root=$self
+                                        arch="java"     ;;
+                        "npm" )         root=$self
+                                        arch="npm"
+                                        BIT=""          ;;
+                        "python" )      root=$self
+                                        arch="python"
+                                        BIT=""          ;;
+                        "local" )       root=$self
+                                        arch="local"    ;;
+                esac
+                if [ $DIR = "scripts" ] ; then
+                        export "${ACCESS}_${DIR}"="${root}/arch/${DIR}"
+                else
+                        export "${ACCESS}_${DIR}"="${root}/arch/${arch}${BIT}/${DIR}"
+                fi
+        done
+done
+arch=$(uname)
+
+export PATH=.:~$local_bin:~$self_bin:~$self_scripts:~$lab_bin:~$lab_scripts:~$python_bin:~$npm_bin:~$java_bin:$PATH
+
+echo -en "\033[0m"
+sep="$(echo +-----------------------------------------------------------------------------+)"
+echo $sep
+echo -en "\t\t\tWelcome to "
+echo -e "\033[45m\033[1;33m$(hostname)\033[0m, $USER"
+echo $sep
+echo -e "Terminal is an $TERM, on a $arch architecture\033[1;31m"
+/usr/bin/uptime 2>/dev/null
+echo -en "\033[0m"
+echo $sep
+echo -en "\033[0;36m"
+if command -v mesg >/dev/null 2>&1; then
+        mesg y >/dev/null 2>&1 || true
+fi
+if command -v pinky >/dev/null 2>&1; then
+        pinky
+fi
+echo -en "\033[0m"
+echo $sep
+echo -en "\033[1;35m"
+if command -v fortune >/dev/null 2>&1; then
+        fortune
+fi
+echo -en "\033[0m"
+echo $sep
+if command -v now >/dev/null 2>&1; then
+        now
+fi
+if command -v cpufetch >/dev/null 2>&1; then
+        cpufetch
+fi
+if command -v neofetch >/dev/null 2>&1; then
+        echo ""
+        neofetch --disable WM  --disable Resolution  2>/dev/null
+        echo ""
+elif [[ $(type -P screenfetch) ]] ; then
+        echo ""
+        screenfetch 2>/dev/null
+        echo ""
+fi
