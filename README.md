@@ -20,6 +20,7 @@ yellow below 15% free and red below 5%; load turns yellow above 5 and red above
 ## Contents
 
 - [Prompt controls](#prompt-controls)
+- [Startup dashboard](#startup-dashboard)
 - [Font setup](#font-setup)
   - [Linux](#linux)
   - [macOS](#macos)
@@ -45,6 +46,17 @@ Powerline arrow cap.
 Directory paths retain up to eight path components in every layout. Longer
 paths begin with `…/`; inside a Git repository, Starship also hides path
 components above the repository root.
+
+## Startup dashboard
+
+Interactive terminals outside tmux open with a boxed dashboard showing machine
+identity, process pressure, active sessions, weather, calendar and time, system
+summaries, and a fortune. Missing optional commands degrade gracefully, and
+weather requests run in parallel with short connection and request timeouts.
+
+Set `STARSHIP_SPLASH=off` to disable the dashboard. Individual slower or more
+decorative sections can be disabled with `STARSHIP_SPLASH_WEATHER=off`,
+`STARSHIP_SPLASH_FETCH=off`, and `STARSHIP_SPLASH_FORTUNE=off`.
 
 ## Font setup
 
@@ -126,11 +138,13 @@ to `~/.install-backups/<timestamp>/` before linking.
 - `~/.zshrc`, `~/.splash`, and `~/.ls_colours_bgblack`
 - `~/.config/starship.toml` and the two- and three-line variants
 - `~/.config/starship-nopills.toml`
+- `~/.config/starship-theme.zsh`
 - `~/.config/starship-gh-status.sh`
 - `~/.config/starship-system-status.sh`
 
 Optional visual integrations are Atuin, Broot, GitHub CLI, Fortune, CPUFetch,
-and Neofetch. Missing optional tools are guarded so Zsh still starts normally.
+Neofetch, Toilet, and Figlet. Missing optional tools are guarded so Zsh still
+starts normally.
 
 The default Node version is pinned in `.nvmrc`; NVM and the two Zsh plugins
 are pinned in `install.sh`.

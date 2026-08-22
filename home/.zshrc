@@ -45,7 +45,7 @@ fi
 # Color Palettes & Startup Scripts
 # ==============================================================================
 [[ -f ~/.ls_colours_bgblack ]] && source ~/.ls_colours_bgblack
-[[ -f ~/.splash ]] && bash ~/.splash
+[[ -f ~/.splash ]] && source ~/.splash
 
 # ==============================================================================
 # History & Completion Configuration
@@ -79,53 +79,47 @@ command -v atuin &>/dev/null && eval "$(atuin init zsh)"
 # ==============================================================================
 # User Binaries & NVM Initialization
 # ==============================================================================
+_starship_legacy_paths() {
+  local BIT DIR ACCESS arch b_64 b_NT root
+  b_64=$(uname -a | grep x86_64 | wc -l)
+  if (( b_64 )); then
+    BIT=64
+  else
+    BIT=32
+  fi
+
+  for DIR in bin lib scripts; do
+    for ACCESS in local self lab java python npm; do
+      arch=$(uname)
+      b_NT=$(uname -a | grep CYGWIN | wc -l)
+      if (( b_NT )); then
+        arch=win
+      fi
+      case $ACCESS in
+        self) root=$self ;;
+        lab) root=$lab ;;
+        java) root=$self; arch=java ;;
+        npm) root=$self; arch=npm; BIT="" ;;
+        python) root=$self; arch=python; BIT="" ;;
+        local) root=$self; arch=local ;;
+      esac
+      if [[ $DIR == scripts ]]; then
+        export "${ACCESS}_${DIR}"="${root}/arch/${DIR}"
+      else
+        export "${ACCESS}_${DIR}"="${root}/arch/${arch}${BIT}/${DIR}"
+      fi
+    done
+  done
+
+  export PATH=.:~$local_bin:~$self_bin:~$self_scripts:~$lab_bin:~$lab_scripts:~$python_bin:~$npm_bin:~$java_bin:$PATH
+}
+_starship_legacy_paths
+unfunction _starship_legacy_paths
+
 export PATH="$HOME/.local/bin:$HOME/arch/scripts:$PATH"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# ==============================================================================
-# Starship Prompt & Layout Toggle Management
-# ==============================================================================
-
-export STARSHIP_PILLS=${STARSHIP_PILLS:-"on"}
-export STARSHIP_LAYOUT=${STARSHIP_LAYOUT:-"2line"}
-
-_apply_starship_config() {
-  if [[ "$STARSHIP_PILLS" == "off" ]]; then
-    export STARSHIP_CONFIG="$HOME/.config/starship-nopills.toml"
-  else
-    export STARSHIP_CONFIG="$HOME/.config/starship-${STARSHIP_LAYOUT}.toml"
-  fi
-}
-
-tp() {
-  if [[ "$STARSHIP_PILLS" == "on" ]]; then
-    STARSHIP_PILLS="off"
-    echo "Pills: OFF"
-  else
-    STARSHIP_PILLS="on"
-    echo "Pills: ON (Layout: ${STARSHIP_LAYOUT})"
-  fi
-  _apply_starship_config
-}
-
-tl() {
-  if [[ "$STARSHIP_PILLS" != "on" ]]; then
-    echo "Cannot toggle layout: pills are currently toggled OFF. Turn them on with 'tp'."
-    return 1
-  fi
-
-  if [[ "$STARSHIP_LAYOUT" == "3line" ]]; then
-    STARSHIP_LAYOUT="2line"
-  else
-    STARSHIP_LAYOUT="3line"
-  fi
-
-  echo "Layout: ${STARSHIP_LAYOUT}"
-  _apply_starship_config
-}
-
-_apply_starship_config
-command -v starship &>/dev/null && eval "$(starship init zsh)"
+[[ -f ~/.config/starship-theme.zsh ]] && source ~/.config/starship-theme.zsh

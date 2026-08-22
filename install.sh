@@ -94,16 +94,16 @@ install_os_packages() {
   for package_name in zsh git curl starship lsd neovim; do install_one_package "$package_name"; done
   case $package_manager in
     pacman)
-      for package_name in atuin broot github-cli fortune-mod cpufetch neofetch; do install_one_package "$package_name"; done
+      for package_name in atuin broot github-cli fortune-mod cpufetch neofetch toilet figlet; do install_one_package "$package_name"; done
       ;;
     brew)
-      for package_name in atuin broot gh fortune neofetch; do install_one_package "$package_name"; done
+      for package_name in atuin broot gh fortune neofetch cpufetch toilet figlet; do install_one_package "$package_name"; done
       ;;
     apt)
-      for package_name in atuin broot gh fortune-mod neofetch; do install_one_package "$package_name"; done
+      for package_name in atuin broot gh fortune-mod neofetch cpufetch toilet figlet ncal finger; do install_one_package "$package_name"; done
       ;;
     termux)
-      for package_name in nodejs atuin broot gh fortune cpufetch neofetch; do install_one_package "$package_name"; done
+      for package_name in nodejs atuin broot gh fortune cpufetch neofetch toilet figlet util-linux; do install_one_package "$package_name"; done
       ;;
   esac
 }

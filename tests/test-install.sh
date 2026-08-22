@@ -16,6 +16,7 @@ for path in \
   .config/starship-2line.toml \
   .config/starship-3line.toml \
   .config/starship-nopills.toml \
+  .config/starship-theme.zsh \
   .config/starship-gh-status.sh \
   .config/starship-system-status.sh; do
   [ -L "$test_home/$path" ] || { echo "expected symlink: $path" >&2; exit 1; }
@@ -30,7 +31,8 @@ backup_count=$(find "$test_home/.install-backups" -type f | wc -l | tr -d ' ')
 }
 
 sh -n "$repo_dir/install.sh"
-sh -n "$test_home/.splash"
+zsh -n "$test_home/.splash"
+zsh -n "$test_home/.config/starship-theme.zsh"
 sh -n "$test_home/.config/starship-gh-status.sh"
 sh -n "$test_home/.config/starship-system-status.sh"
 for status_name in ram disk load; do
@@ -54,7 +56,7 @@ for status_name in ram disk load; do
   }
 done
 zsh -n "$test_home/.zshrc"
-[ "$(grep -c 'starship init zsh' "$test_home/.zshrc")" -eq 1 ] || {
+[ "$(grep -c 'starship init zsh' "$test_home/.config/starship-theme.zsh")" -eq 1 ] || {
   echo "expected exactly one Starship initialization" >&2
   exit 1
 }
@@ -63,7 +65,8 @@ zsh -n "$test_home/.zshrc"
   exit 1
 }
 for config_file in "$test_home"/.config/starship*.toml; do
-  STARSHIP_CONFIG="$config_file" starship module character >/dev/null
+  HOME="$test_home" XDG_CACHE_HOME="$test_home/.cache" STARSHIP_CONFIG="$config_file" \
+    starship module character >/dev/null
 done
 
 mkdir "$test_home/bin"
@@ -78,6 +81,45 @@ HOME="$test_home" PATH="$test_home/bin" "$zsh_path" -fc 'unset STARSHIP_CONFIG S
   cat "$minimal_stderr" >&2
   exit 1
 }
+HOME="$test_home" PATH="$test_home/bin" "$zsh_path" -fc '
+  . "$HOME/.config/starship-theme.zsh"
+  tl >/dev/null
+  [ "$STARSHIP_CONFIG" = "$HOME/.config/starship-3line.toml" ]
+  tp >/dev/null
+  [ "$STARSHIP_CONFIG" = "$HOME/.config/starship-nopills.toml" ]
+  ! tl >/dev/null
+  tp >/dev/null
+  [ "$STARSHIP_CONFIG" = "$HOME/.config/starship-3line.toml" ]
+'
+
+splash_output=$(HOME="$test_home" STARSHIP_SPLASH_WEATHER=off STARSHIP_SPLASH_FETCH=off \
+  STARSHIP_SPLASH_FORTUNE=off TERM=xterm-256color \
+  "$zsh_path" -fic '. "$HOME/.splash"' 2>/dev/null)
+for section_name in 'console matrix' 'process board' 'session index' \
+  'temperature cities' 'calendar and time' 'signal'; do
+  printf '%s\n' "$splash_output" | grep -F "$section_name" >/dev/null || {
+    echo "expected splash section: $section_name" >&2
+    exit 1
+  }
+done
+[ -z "$(HOME="$test_home" STARSHIP_SPLASH=off TERM=xterm-256color "$zsh_path" -fic '. "$HOME/.splash"' 2>/dev/null)" ] || {
+  echo "disabled splash produced output" >&2
+  exit 1
+}
+[ -z "$(HOME="$test_home" TMUX=1 TERM=xterm-256color "$zsh_path" -fic '. "$HOME/.splash"' 2>/dev/null)" ] || {
+  echo "tmux splash produced output"
+  exit 1
+}
+HOME="$test_home" STARSHIP_SPLASH_WEATHER=off STARSHIP_SPLASH_FETCH=off \
+  STARSHIP_SPLASH_FORTUNE=off TERM=xterm-256color \
+  "$zsh_path" -fic '
+    . "$HOME/.splash" >/dev/null
+    for helper_name in _starship_splash_main _starship_splash_rule \
+      _starship_splash_footer _starship_splash_box_line \
+      _starship_splash_box_stream; do
+      ! whence "$helper_name" >/dev/null 2>&1 || exit 1
+    done
+  ' 2>/dev/null
 
 termux_bin="$test_home/termux-bin"
 termux_home="$test_home/termux-home"
@@ -97,6 +139,8 @@ TERMUX_VERSION=0.118.0 PREFIX=/data/data/com.termux/files/usr \
 grep -Fx 'update -y' "$termux_package_log" >/dev/null
 grep -Fx 'install -y starship' "$termux_package_log" >/dev/null
 grep -Fx 'install -y nodejs' "$termux_package_log" >/dev/null
+grep -Fx 'install -y toilet' "$termux_package_log" >/dev/null
+grep -Fx 'install -y util-linux' "$termux_package_log" >/dev/null
 [ ! -d "$termux_home/.nvm" ] || { echo "Termux install used NVM" >&2; exit 1; }
 ! grep -q '^sudo ' "$termux_package_log"
 [ -L "$termux_home/.zshrc" ] || { echo "Termux install did not link .zshrc" >&2; exit 1; }
