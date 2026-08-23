@@ -102,6 +102,34 @@ for section_name in 'console matrix' 'process board' 'session index' \
     exit 1
   }
 done
+
+weather_bin="$test_home/weather-bin"
+weather_output="$test_home/weather-output"
+weather_stderr="$test_home/weather-stderr"
+mkdir "$weather_bin"
+printf '%s\n' \
+  '#!/bin/sh' \
+  "printf '%s\\n' 'Weather report: Test' '' '    Clear' '    +20°C' '    ↙ 5 km/h'" \
+  > "$weather_bin/curl"
+chmod +x "$weather_bin/curl"
+HOME="$test_home" PATH="$weather_bin:$PATH" STARSHIP_SPLASH_WEATHER=on \
+  STARSHIP_SPLASH_FETCH=off STARSHIP_SPLASH_FORTUNE=off TERM=xterm-256color \
+  "$zsh_path" -fic '. "$HOME/.splash"' >"$weather_output" 2>"$weather_stderr"
+[ ! -s "$weather_stderr" ] || {
+  cat "$weather_stderr" >&2
+  exit 1
+}
+! grep -F 'feed unavailable' "$weather_output" >/dev/null || {
+  echo "weather worker output disappeared before rendering" >&2
+  exit 1
+}
+for city_name in Boston 'New York City' 'Troy, NY' 'Cape Town'; do
+  grep -F "$city_name" "$weather_output" >/dev/null || {
+    echo "expected weather city: $city_name" >&2
+    exit 1
+  }
+done
+
 [ -z "$(HOME="$test_home" STARSHIP_SPLASH=off TERM=xterm-256color "$zsh_path" -fic '. "$HOME/.splash"' 2>/dev/null)" ] || {
   echo "disabled splash produced output" >&2
   exit 1

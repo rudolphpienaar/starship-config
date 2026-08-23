@@ -14,8 +14,12 @@ local weather_dir="" weather_index weather_spec weather_pid query label
 local weather_blob condition forecast temp wind
 local cal_file="" clock_file=""
 local -a weather_specs weather_pids
+local -i splash_subshell=$ZSH_SUBSHELL
+
+setopt LOCAL_OPTIONS NO_MONITOR
 
 TRAPEXIT() {
+  (( ZSH_SUBSHELL == splash_subshell )) || return 0
   if [[ -n "$weather_dir" && -d "$weather_dir" ]]; then
     rm -r -- "$weather_dir"
   fi
@@ -204,7 +208,8 @@ elif command -v curl >/dev/null 2>&1; then
     _starship_splash_box_line 214 "$(printf '%-16s  %-18s  %s' "$label" "$condition" "$forecast")"
     (( weather_index++ ))
   done
-  rm -r "$weather_dir"
+  rm -r -- "$weather_dir"
+  weather_dir=""
 else
   _starship_splash_box_line 214 "weather feed unavailable"
 fi
@@ -231,7 +236,9 @@ print ""
 _starship_splash_rule 178 "calendar and time"
 paste "$cal_file" "$clock_file" | _starship_splash_box_stream 178
 _starship_splash_footer 178
-rm -f "$cal_file" "$clock_file"
+rm -f -- "$cal_file" "$clock_file"
+cal_file=""
+clock_file=""
 
 if [[ "${STARSHIP_SPLASH_FETCH:-on}" != "off" ]] && command -v cpufetch >/dev/null 2>&1; then
   cpufetch
