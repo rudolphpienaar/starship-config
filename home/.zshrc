@@ -121,4 +121,17 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-[[ -f ~/.config/starship-theme.zsh ]] && source ~/.config/starship-theme.zsh
+# Prefer the installed runtime. When this managed .zshrc is symlinked before
+# its companion file is installed, resolve the runtime next to the source file
+# so that tp and tl remain available.
+_starship_runtime_file="$HOME/.config/starship-theme.zsh"
+if [[ ! -f "$_starship_runtime_file" ]]; then
+  _starship_runtime_file="${${(%):-%N}:A:h}/.config/starship-theme.zsh"
+fi
+
+if [[ -f "$_starship_runtime_file" ]]; then
+  source "$_starship_runtime_file"
+elif command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi
+unset _starship_runtime_file

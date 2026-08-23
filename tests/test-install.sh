@@ -80,12 +80,28 @@ for config_file in "$test_home"/.config/starship*.toml; do
   }
 done
 
+# When the companion runtime is not installed yet, .zshrc must still start
+# Starship instead of leaving Zsh's fallback `hostname%` prompt active.
+fallback_home="$test_home/fallback-home"
+mkdir "$fallback_home"
+zsh_path=$(command -v zsh)
+HOME="$fallback_home" XDG_CACHE_HOME="$fallback_home/.cache" STARSHIP_REPO_DIR="$repo_dir" "$zsh_path" -dfc '
+  . "$STARSHIP_REPO_DIR/home/.zshrc"
+  [[ "$PROMPT" == *starship* ]]
+  whence -w tp | grep -Fx "tp: function"
+  whence -w tl | grep -Fx "tl: function"
+  tp >/dev/null
+  [[ "$STARSHIP_PILLS" == off ]]
+  tp >/dev/null
+  tl >/dev/null
+  [[ "$STARSHIP_LAYOUT" == 3line ]]
+'
+
 mkdir "$test_home/bin"
 for command_name in bash grep hostname mv uname wc whoami; do
   ln -s "$(command -v "$command_name")" "$test_home/bin/$command_name"
 done
 ln -s "$(command -v true)" "$test_home/bin/brew"
-zsh_path=$(command -v zsh)
 minimal_stderr="$test_home/minimal-zsh.stderr"
 HOME="$test_home" PATH="$test_home/bin" "$zsh_path" -fc 'unset STARSHIP_CONFIG STARSHIP_LAYOUT STARSHIP_PILLS; . "$HOME/.zshrc"; [ "$STARSHIP_CONFIG" = "$HOME/.config/starship-2line.toml" ]; case ":$PATH:" in *":$HOME/arch/scripts:"*) ;; *) exit 1 ;; esac; whence -w tp; whence -w tl' >/dev/null 2>"$minimal_stderr"
 [ ! -s "$minimal_stderr" ] || {
