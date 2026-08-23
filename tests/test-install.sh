@@ -69,6 +69,17 @@ for config_file in "$test_home"/.config/starship*.toml; do
     starship module character >/dev/null
 done
 
+expected_username=$(whoami)
+for config_file in "$test_home"/.config/starship*.toml; do
+  username_prompt=$(HOME="$test_home" XDG_CACHE_HOME="$test_home/.cache" \
+    USERNAME= TERM=xterm-256color STARSHIP_CONFIG="$config_file" \
+    starship prompt --status 0)
+  printf '%s\n' "$username_prompt" | grep -F "$expected_username" >/dev/null || {
+    echo "expected username in prompt: $config_file" >&2
+    exit 1
+  }
+done
+
 mkdir "$test_home/bin"
 for command_name in bash grep hostname mv uname wc whoami; do
   ln -s "$(command -v "$command_name")" "$test_home/bin/$command_name"

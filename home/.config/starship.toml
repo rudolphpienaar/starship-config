@@ -5,7 +5,7 @@ command_timeout = 2000
 add_newline = true
 
 format = """
-[╭─](fg:#4e4e4e)$os$env_var$hostname$directory$git_branch$git_status
+[╭─](fg:#4e4e4e)$os$username$hostname$directory$git_branch$git_status
 [├─ ](fg:#4e4e4e)$status$cmd_duration$jobs$direnv$nodejs$python$c$rust$golang$java$lua$kubernetes$terraform$aws$gcloud${custom.gh_ok}${custom.gh_err}$nix_shell${custom.ram_ok}${custom.ram_warn}${custom.ram_crit}${custom.disk_ok}${custom.disk_warn}${custom.disk_crit}${custom.load_ok}${custom.load_warn}${custom.load_crit}$time
 [╰─](fg:#4e4e4e)$character"""
 
@@ -30,10 +30,10 @@ Linux = ""
 Windows = ""
 Android = ""
 
-[env_var.USERNAME]
-variable = "USERNAME"
-style = "bg:#d78700 fg:#080808 bold"
-format = "[  $env_value ]($style)[](fg:#d78700 bg:#5f00af)"
+[username]
+show_always = true
+style_user = "bg:#d78700 fg:#080808 bold"
+format = "[  $user ]($style)[](fg:#d78700 bg:#5f00af)"
 
 [hostname]
 ssh_only = false

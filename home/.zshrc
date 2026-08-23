@@ -2,7 +2,6 @@ export TERM="xterm-256color"
 # ==============================================================================
 # Environment & User Exports
 # ==============================================================================
-export USERNAME=$(whoami)
 export EDITOR="nvim"
 export VISUAL="nvim"
 
