@@ -41,7 +41,9 @@ available only while pills are enabled.
 The default is the two-line pill layout.
 In that layout, a horizontal rule connects the left prompt segments to the
 right-side environmental pills. Every left segment group begins with a
-Powerline arrow cap.
+Powerline arrow cap. The primary context always shows the operating system,
+login name, hostname, and current directory before any Git status, for example
+`❄️    rudolph   󰣀 callisto   ~`.
 
 Directory paths retain up to eight path components in every layout. Longer
 paths begin with `…/`; inside a Git repository, Starship also hides path
@@ -50,9 +52,21 @@ components above the repository root.
 ## Startup dashboard
 
 Interactive terminals outside tmux open with a boxed dashboard showing machine
-identity, process pressure, active sessions, weather, calendar and time, system
-summaries, and a fortune. Missing optional commands degrade gracefully, and
-weather requests run in parallel with short connection and request timeouts.
+and session context before the first prompt:
+
+- `console matrix`: hostname, login, terminal, kernel, architecture, and uptime
+- `process board`: the ten processes currently using the most CPU
+- `session index`: active logins reported by `finger` or `who`
+- `temperature cities`: current conditions for Boston, New York City, Troy,
+  New York, and Cape Town
+- `calendar and time`: the current month beside a large clock when `toilet` or
+  `figlet` is available
+- optional CPUFetch plus Neofetch or Screenfetch system summaries
+- `signal`: a fortune when the `fortune` command is available
+
+Missing optional commands and unavailable feeds degrade gracefully. Weather
+requests run in parallel with short connection and request timeouts, while the
+dashboard waits for every city before rendering the panel.
 
 Set `STARSHIP_SPLASH=off` to disable the dashboard. Individual slower or more
 decorative sections can be disabled with `STARSHIP_SPLASH_WEATHER=off`,
