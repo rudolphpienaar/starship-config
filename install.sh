@@ -197,6 +197,10 @@ if [ "$install_packages" = true ]; then
   install_os_packages
 fi
 install_managed_files
+if is_termux; then
+  log 'Termux username fallback installed in the shared Starship runtime.'
+  log 'To refresh this Zsh session, source the installed .config/starship-theme.zsh file.'
+fi
 if [ "$install_external" = true ]; then
   install_external_tools
 fi

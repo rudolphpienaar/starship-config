@@ -1,6 +1,13 @@
 # Managed by this repository.
 # Shared Starship runtime used by ordinary installs and Home Manager.
 
+# Android's Starship username module requires an exported USER. Resolve it
+# at shell startup so installs remain portable between users and machines.
+if [[ -z "${USER:-}" ]]; then
+  USER=$(id -un 2>/dev/null) || USER=${LOGNAME:-}
+fi
+export USER
+
 export STARSHIP_PILLS=${STARSHIP_PILLS:-"on"}
 export STARSHIP_LAYOUT=${STARSHIP_LAYOUT:-"2line"}
 

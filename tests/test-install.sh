@@ -70,10 +70,30 @@ for config_file in "$test_home"/.config/starship*.toml; do
 done
 
 expected_username=$(whoami)
+# Test later shell startup, since an installer export cannot repair its parent.
+for user_state in missing empty existing; do
+  HOME="$test_home" XDG_CACHE_HOME="$test_home/.cache" \
+    TEST_USER_STATE="$user_state" TEST_EXPECTED_USERNAME="$expected_username" \
+    zsh -dfc '
+      case "$TEST_USER_STATE" in
+        missing) unset USER ;;
+        empty) USER= ;;
+        existing) USER=custom-name ;;
+      esac
+      . "$HOME/.config/starship-theme.zsh"
+      if [[ "$TEST_USER_STATE" == existing ]]; then
+        [[ "$USER" == custom-name ]] || exit 1
+      else
+        [[ "$USER" == "$TEST_EXPECTED_USERNAME" ]] || exit 1
+        starship module username | grep -F "$TEST_EXPECTED_USERNAME" || exit 1
+      fi
+      env | grep -Fx "USER=$USER"
+    '
+done
 for config_file in "$test_home"/.config/starship*.toml; do
   username_prompt=$(HOME="$test_home" XDG_CACHE_HOME="$test_home/.cache" \
     USERNAME= TERM=xterm-256color STARSHIP_CONFIG="$config_file" \
-    starship prompt --status 0)
+    zsh -dfc '. "$HOME/.config/starship-theme.zsh"; export STARSHIP_CONFIG="$1"; starship prompt --status 0' zsh "$config_file")
   printf '%s\n' "$username_prompt" | grep -F "$expected_username" >/dev/null || {
     echo "expected username in prompt: $config_file" >&2
     exit 1
@@ -98,7 +118,7 @@ HOME="$fallback_home" XDG_CACHE_HOME="$fallback_home/.cache" STARSHIP_REPO_DIR="
 '
 
 mkdir "$test_home/bin"
-for command_name in bash grep hostname mv uname wc whoami; do
+for command_name in bash grep hostname id mv uname wc whoami; do
   ln -s "$(command -v "$command_name")" "$test_home/bin/$command_name"
 done
 ln -s "$(command -v true)" "$test_home/bin/brew"

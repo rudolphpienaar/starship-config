@@ -135,6 +135,12 @@ the managed symlinks. Other supported platforms use pinned NVM and Node.
 Termux uses `pkg` directly, installs its native `nodejs` package, and never
 requires `sudo` or NVM.
 
+The installed prompt runtime exports `USER`, resolving it with `id -un` when
+missing or empty. This keeps the username segment visible on Termux, where
+Starship requires that environment variable. Existing nonempty values are
+preserved. Start a new Zsh session, or run `source ~/.config/starship-theme.zsh`
+to apply the fallback in your current session.
+
 Authentication and account state for GitHub, Atuin, and cloud providers remain
 local to each machine. Existing files that differ from a managed symlink move
 to `~/.install-backups/<timestamp>/` before linking.
