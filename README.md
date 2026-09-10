@@ -49,6 +49,12 @@ Directory paths retain up to eight path components in every layout. Longer
 paths begin with `…/`; inside a Git repository, Starship also hides path
 components above the repository root.
 
+All layouts allow 200 ms for directory scans (`scan_timeout`), up from
+Starship's 30 ms default, to reduce scan-timeout warnings on busy or slower
+filesystems. This is a maximum wait, not a delay added to every prompt.
+If scans still time out, increase this top-level setting in the active
+configuration. `command_timeout` controls external commands separately.
+
 ## Startup dashboard
 
 Interactive terminals outside tmux open with a boxed dashboard showing machine

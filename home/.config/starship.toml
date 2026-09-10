@@ -1,4 +1,6 @@
 # Managed by this repository. This is the legacy/default three-line variant.
+# Allow directory scans more time on busy or slower filesystems (milliseconds).
+scan_timeout = 200
 command_timeout = 2000
 "$schema" = 'https://starship.rs/config-schema.json'
 
