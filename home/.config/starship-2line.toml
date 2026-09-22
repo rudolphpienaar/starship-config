@@ -12,6 +12,7 @@ format = """
 
 [fill]
 symbol = "─"
+style = "fg:#ffffff"
 
 # ==============================================================================
 # Left Prompt Segments: OS  User  Host  Directory  Git
