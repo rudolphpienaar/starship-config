@@ -1,7 +1,7 @@
 # Managed by this repository.
 # Allow directory scans more time on busy or slower filesystems (milliseconds).
 scan_timeout = 200
-command_timeout = 2000
+command_timeout = 500
 "$schema" = 'https://starship.rs/config-schema.json'
 
 add_newline = true
@@ -163,12 +163,14 @@ vimcmd_replace_symbol = "[▶](bold fg:#af8700) "
 vimcmd_visual_symbol = "[V](bold fg:#0087d7) "
 
 [custom.gh_ok]
+shell = ["sh"]
 command = "exit 0"
 when = "~/.config/starship-gh-status.sh"
 style = "bg:#2e7d32 fg:#ffffff bold"
 format = "[](fg:#2e7d32)[  ]($style)[](fg:#2e7d32) "
 
 [custom.gh_err]
+shell = ["sh"]
 command = "exit 0"
 when = "! ~/.config/starship-gh-status.sh"
 style = "bg:#c62828 fg:#ffffff bold"
