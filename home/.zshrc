@@ -31,8 +31,8 @@ export LESS_TERMCAP_us=$'\e[1;4;31m'
 # ==============================================================================
 # Custom Aliases & Neovim/AstroNvim Environments
 # ==============================================================================
-alias avim="NVIM_APPNAME=astronvim nvim"
-alias aview="NVIM_APPNAME=astronvim nvim -R"
+alias avim="NVIM_APPNAME=avim nvim"
+alias aview="NVIM_APPNAME=avim nvim -R"
 if command -v lsd >/dev/null 2>&1; then
   alias ls="lsd"
   alias l="lsd -l"
@@ -67,7 +67,10 @@ if [[ -f ~/.config/broot/launcher/zsh/br ]]; then
 elif [[ -f ~/.config/broot/launcher/bash/br ]]; then
   source ~/.config/broot/launcher/bash/br
 fi
-command -v atuin &>/dev/null && eval "$(atuin init zsh)"
+# Allow a broken remote database to be bypassed without losing Zsh history.
+if [[ "${STARSHIP_ATUIN:-on}" != off ]] && command -v atuin &>/dev/null; then
+  eval "$(atuin init zsh)"
+fi
 
 # ==============================================================================
 # Plugins (Autosuggestions & Syntax Highlighting)

@@ -8,9 +8,11 @@ Along the way, it developed its own visual language: rounded environmental
 "pills" on the right. They surface active tools, cloud contexts, status, and
 other useful tokens without crowding the primary directory and Git context.
 
-The GitHub pill is reactive. It is green when `gh auth status` succeeds and
-red when it fails, so an expired or missing GitHub CLI login is visible before
-you need it.
+The GitHub pill is green when a local GitHub CLI credential is available and
+red when it is missing. Prompt redraws use `gh auth token` with all output
+suppressed, avoiding network requests. This does not detect expired tokens;
+run `gh auth status` to validate a login. To restore live validation on every
+redraw, export `STARSHIP_GH_LIVE_CHECK=on`.
 
 System-status pills show available/total RAM, the free-space percentage of the
 current filesystem, and the one-minute load average. RAM and disk pills turn
@@ -53,7 +55,16 @@ All layouts allow 200 ms for directory scans (`scan_timeout`), up from
 Starship's 30 ms default, to reduce scan-timeout warnings on busy or slower
 filesystems. This is a maximum wait, not a delay added to every prompt.
 If scans still time out, increase this top-level setting in the active
-configuration. `command_timeout` controls external commands separately.
+configuration. External commands have a separate 500 ms `command_timeout`,
+so slow commands do not hold the prompt for the previous two-second limit.
+Custom modules use plain `sh` without interactive shell initialization.
+
+If Atuin fails on a remote host, start `STARSHIP_ATUIN=off zsh` to bypass its
+hooks while retaining ordinary Zsh history and Ctrl-R. Check `atuin doctor`,
+database ownership, and the filesystem containing the Atuin data directory.
+Do not delete the database to fix a connection-pool error. Shared NFS homes
+may require host-local Atuin storage; configure this on the affected host
+and back up existing history before moving it.
 
 ## Startup dashboard
 

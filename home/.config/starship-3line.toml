@@ -1,7 +1,7 @@
 # Managed by this repository.
 # Allow directory scans more time on busy or slower filesystems (milliseconds).
 scan_timeout = 200
-command_timeout = 2000
+command_timeout = 500
 "$schema" = 'https://starship.rs/config-schema.json'
 
 add_newline = true
@@ -158,54 +158,63 @@ style = "bg:#005f87 fg:#eeeeee bold"
 format = "[](fg:#005f87)[  nix ]($style)[](fg:#005f87) "
 
 [custom.ram_ok]
+shell = ["sh"]
 command = "~/.config/starship-system-status.sh ram"
 when = "~/.config/starship-system-status.sh ram-state normal"
 style = "bg:#005f5f fg:#eeeeee bold"
 format = "[](fg:#005f5f)[ 󰍛 $output ]($style)[](fg:#005f5f) "
 
 [custom.ram_warn]
+shell = ["sh"]
 command = "~/.config/starship-system-status.sh ram"
 when = "~/.config/starship-system-status.sh ram-state yellow"
 style = "bg:#d7af00 fg:#080808 bold"
 format = "[](fg:#d7af00)[ 󰍛 $output ]($style)[](fg:#d7af00) "
 
 [custom.ram_crit]
+shell = ["sh"]
 command = "~/.config/starship-system-status.sh ram"
 when = "~/.config/starship-system-status.sh ram-state red"
 style = "bg:#c62828 fg:#ffffff bold"
 format = "[](fg:#c62828)[ 󰍛 $output ]($style)[](fg:#c62828) "
 
 [custom.disk_ok]
+shell = ["sh"]
 command = "~/.config/starship-system-status.sh disk"
 when = "~/.config/starship-system-status.sh disk-state normal"
 style = "bg:#5f5f87 fg:#eeeeee bold"
 format = "[](fg:#5f5f87)[ 󰋊 $output% free ]($style)[](fg:#5f5f87) "
 
 [custom.disk_warn]
+shell = ["sh"]
 command = "~/.config/starship-system-status.sh disk"
 when = "~/.config/starship-system-status.sh disk-state yellow"
 style = "bg:#d7af00 fg:#080808 bold"
 format = "[](fg:#d7af00)[ 󰋊 $output% free ]($style)[](fg:#d7af00) "
 
 [custom.disk_crit]
+shell = ["sh"]
 command = "~/.config/starship-system-status.sh disk"
 when = "~/.config/starship-system-status.sh disk-state red"
 style = "bg:#c62828 fg:#ffffff bold"
 format = "[](fg:#c62828)[ 󰋊 $output% free ]($style)[](fg:#c62828) "
 
 [custom.load_ok]
+shell = ["sh"]
 command = "~/.config/starship-system-status.sh load"
 when = "~/.config/starship-system-status.sh load-state normal"
 style = "bg:#875f00 fg:#eeeeee bold"
 format = "[](fg:#875f00)[ 󰓅 $output ]($style)[](fg:#875f00) "
 
 [custom.load_warn]
+shell = ["sh"]
 command = "~/.config/starship-system-status.sh load"
 when = "~/.config/starship-system-status.sh load-state yellow"
 style = "bg:#d7af00 fg:#080808 bold"
 format = "[](fg:#d7af00)[ 󰓅 $output ]($style)[](fg:#d7af00) "
 
 [custom.load_crit]
+shell = ["sh"]
 command = "~/.config/starship-system-status.sh load"
 when = "~/.config/starship-system-status.sh load-state red"
 style = "bg:#c62828 fg:#ffffff bold"
@@ -244,12 +253,14 @@ format = "[\ue0b6](fg:#4e4e4e)[ \uf417 $hash ]($style)[\ue0b4](fg:#4e4e4e) "
 
 
 [custom.gh_ok]
+shell = ["sh"]
 command = "exit 0"
 when = "~/.config/starship-gh-status.sh"
 style = "bg:#2e7d32 fg:#ffffff bold"
 format = "[\ue0b6](fg:#2e7d32)[ \uf09b ]($style)[\ue0b4](fg:#2e7d32) "
 
 [custom.gh_err]
+shell = ["sh"]
 command = "exit 0"
 when = "! ~/.config/starship-gh-status.sh"
 style = "bg:#c62828 fg:#ffffff bold"
